@@ -28,13 +28,17 @@ function App() {
     }
   }, [])
 
+  const showAddCategory = () => {
+    setShouldShowAddCategory(true)
+  }
+
   return (
     <div className="App">
       {shouldShowAddCategory ? (
         <AddCategory onSubmit={addCategory} />
       ) : (
         <div>
-          <NavBar />
+          <NavBar categories={categories} showAddCategory={showAddCategory} />
           <div className="container flex">
             <div className="w-1/2">
               <BillsTable />
