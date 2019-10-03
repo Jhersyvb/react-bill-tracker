@@ -10,6 +10,8 @@ import BillsTable from './components/BillsTable'
 function App() {
   const [shouldShowAddCategory, setShouldShowAddCategory] = useState(false)
   const [categories, setCategories] = useState([])
+  const [shouldShowAddBill, setShouldShowAddBill] = useState(true)
+  const [bills, setBills] = useState([])
 
   const addCategory = category => {
     const updatedCategories = [...(categories || []), category]
@@ -20,8 +22,10 @@ function App() {
 
   useEffect(() => {
     const categoriesInLocalStorage = JSON.parse(localStorage.getItem('categories'))
+    const billsInLocalStorage = JSON.parse(localStorage.getItem('bills'))
 
     setCategories(categoriesInLocalStorage)
+    setBills(billsInLocalStorage)
 
     if (!categoriesInLocalStorage) {
       setShouldShowAddCategory(true)
@@ -32,10 +36,20 @@ function App() {
     setShouldShowAddCategory(true)
   }
 
+  const addBill = (amount, category, date) => {
+    const bill = {amount, category, date}
+    const updatedBills = [...(bills || []), bill]
+    setBills(updatedBills)
+    setShouldShowAddBill(false)
+    localStorage.setItem('bills', JSON.stringify(updatedBills))
+  }
+
   return (
     <div className="App">
       {shouldShowAddCategory ? (
         <AddCategory onSubmit={addCategory} />
+      ) : shouldShowAddBill ? (
+        <AddBill onSubmit={addBill} categories={categories} />
       ) : (
         <div>
           <NavBar categories={categories} showAddCategory={showAddCategory} />
