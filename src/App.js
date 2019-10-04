@@ -10,7 +10,7 @@ import BillsTable from './components/BillsTable'
 function App() {
   const [shouldShowAddCategory, setShouldShowAddCategory] = useState(false)
   const [categories, setCategories] = useState([])
-  const [shouldShowAddBill, setShouldShowAddBill] = useState(true)
+  const [shouldShowAddBill, setShouldShowAddBill] = useState(false)
   const [bills, setBills] = useState([])
 
   const addCategory = category => {
@@ -44,6 +44,10 @@ function App() {
     localStorage.setItem('bills', JSON.stringify(updatedBills))
   }
 
+  const showAddBill = () => {
+    setShouldShowAddBill(true)
+  }
+
   return (
     <div className="App">
       {shouldShowAddCategory ? (
@@ -55,7 +59,7 @@ function App() {
           <NavBar categories={categories} showAddCategory={showAddCategory} />
           <div className="container flex">
             <div className="w-1/2">
-              <BillsTable />
+              <BillsTable bills={bills} showAddBill={showAddBill} />
             </div>
             <div className="w-1/2">
               <Chart />
