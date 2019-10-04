@@ -66,12 +66,12 @@ function App() {
       ) : (
         <div>
           <NavBar categories={categories} showAddCategory={showAddCategory} />
-          <div className="container flex">
+          <div className="container mx-auto flex">
             <div className="w-1/2">
               <BillsTable bills={bills} showAddBill={showAddBill} removeBill={removeBill} />
             </div>
             <div className="w-1/2">
-              <Chart />
+              <Chart bills={bills} />
             </div>
           </div>
         </div>
