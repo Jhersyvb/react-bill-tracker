@@ -37,7 +37,7 @@ function App() {
   }
 
   const addBill = (amount, category, date) => {
-    const bill = {amount, category, date}
+    const bill = { amount, category, date }
     const updatedBills = [...(bills || []), bill]
     setBills(updatedBills)
     setShouldShowAddBill(false)
@@ -46,6 +46,15 @@ function App() {
 
   const showAddBill = () => {
     setShouldShowAddBill(true)
+  }
+
+  const removeBill = index => {
+    let updatedBills = [...bills]
+    updatedBills = updatedBills
+      .slice(0, index)
+      .concat(updatedBills.slice(index + 1, updatedBills.length))
+    setBills(updatedBills)
+    localStorage.setItem('bills', JSON.stringify(updatedBills))
   }
 
   return (
@@ -59,7 +68,7 @@ function App() {
           <NavBar categories={categories} showAddCategory={showAddCategory} />
           <div className="container flex">
             <div className="w-1/2">
-              <BillsTable bills={bills} showAddBill={showAddBill} />
+              <BillsTable bills={bills} showAddBill={showAddBill} removeBill={removeBill} />
             </div>
             <div className="w-1/2">
               <Chart />

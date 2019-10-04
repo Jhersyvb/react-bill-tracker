@@ -6,6 +6,10 @@ export default props => {
     props.showAddBill()
   }
 
+  const removeBill = index => {
+    props.removeBill(index)
+  }
+
   return (
     <table className="table">
       <thead className="bg-blue-500 text-white">
@@ -19,7 +23,9 @@ export default props => {
       <tbody>
         <tr className="bg-blue-200 text-center">
           <td colSpan="4">
-            <button className="underline" onClick={triggerShowAddBill}>Add new</button>
+            <button className="underline" onClick={triggerShowAddBill}>
+              Add new
+            </button>
           </td>
         </tr>
         {props.bills.map((value, index) => {
@@ -28,6 +34,9 @@ export default props => {
               <td>{Moment(value.date).format('MMM D YYYY')}</td>
               <td>${value.amount}</td>
               <td>{value.category}</td>
+              <td>
+                <button onClick={() => removeBill(index)}>𝗫</button>
+              </td>
             </tr>
           )
         })}
