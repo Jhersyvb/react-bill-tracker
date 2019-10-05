@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react'
+import { Router, Route } from 'react-router-dom'
+import history from './history'
 import './App.css'
 
 import AddCategory from './components/AddCategory'
@@ -8,17 +10,15 @@ import Chart from './components/Chart'
 import BillsTable from './components/BillsTable'
 
 function App() {
-  const [shouldShowAddCategory, setShouldShowAddCategory] = useState(false)
   const [categories, setCategories] = useState([])
-  const [shouldShowAddBill, setShouldShowAddBill] = useState(false)
   const [bills, setBills] = useState([])
   const [activeCategory, setActiveCategory] = useState('')
 
   const addCategory = category => {
     const updatedCategories = [...(categories || []), category]
     setCategories(updatedCategories)
-    setShouldShowAddCategory(false)
     localStorage.setItem('categories', JSON.stringify(updatedCategories))
+    history.push('/')
   }
 
   useEffect(() => {
@@ -29,24 +29,16 @@ function App() {
     setBills(billsInLocalStorage)
 
     if (!categoriesInLocalStorage) {
-      setShouldShowAddCategory(true)
+      history.push('/add-category')
     }
   }, [])
-
-  const showAddCategory = () => {
-    setShouldShowAddCategory(true)
-  }
 
   const addBill = (amount, category, date) => {
     const bill = { amount, category, date }
     const updatedBills = [...(bills || []), bill]
     setBills(updatedBills)
-    setShouldShowAddBill(false)
     localStorage.setItem('bills', JSON.stringify(updatedBills))
-  }
-
-  const showAddBill = () => {
-    setShouldShowAddBill(true)
+    history.push('/')
   }
 
   const removeBill = index => {
@@ -59,6 +51,7 @@ function App() {
   }
 
   const activeBills = () => {
+    if (!bills) return []
     return bills
       .filter(bill => (activeCategory ? bill.category === activeCategory : true))
       .sort((a, b) => (new Date(a.date) < new Date(b.date) ? 1 : -1))
@@ -69,30 +62,36 @@ function App() {
   }
 
   return (
-    <div className="App">
-      {shouldShowAddCategory ? (
-        <AddCategory onSubmit={addCategory} />
-      ) : shouldShowAddBill ? (
-        <AddBill onSubmit={addBill} categories={categories} />
-      ) : (
-        <div>
-          <NavBar
-            categories={categories}
-            showAddCategory={showAddCategory}
-            activeCategory={activeCategory}
-            setNewActiveCategory={setNewActiveCategory}
-          />
-          <div className="container mx-auto flex">
-            <div className="w-1/2">
-              <BillsTable bills={activeBills()} showAddBill={showAddBill} removeBill={removeBill} />
+    <Router history={history}>
+      <div className="App">
+        <Route path="/add-category" render={() => <AddCategory onSubmit={addCategory} />} />
+        <Route
+          path="/add-bill"
+          render={() => <AddBill onSubmit={addBill} categories={categories} />}
+        />
+        <Route
+          exact
+          path="/"
+          render={() => (
+            <div>
+              <NavBar
+                categories={categories}
+                activeCategory={activeCategory}
+                setNewActiveCategory={setNewActiveCategory}
+              />
+              <div className="container mx-auto flex">
+                <div className="w-1/2">
+                  <BillsTable bills={activeBills()} removeBill={removeBill} />
+                </div>
+                <div className="w-1/2">
+                  <Chart bills={activeBills()} />
+                </div>
+              </div>
             </div>
-            <div className="w-1/2">
-              <Chart bills={activeBills()} />
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
+          )}
+        />
+      </div>
+    </Router>
   )
 }
 

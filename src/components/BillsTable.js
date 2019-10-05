@@ -1,11 +1,8 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import Moment from 'moment'
 
 export default props => {
-  const triggerShowAddBill = () => {
-    props.showAddBill()
-  }
-
   const removeBill = index => {
     props.removeBill(index)
   }
@@ -23,9 +20,9 @@ export default props => {
       <tbody>
         <tr className="bg-blue-200 text-center">
           <td colSpan="4">
-            <button className="underline" onClick={triggerShowAddBill}>
+            <Link to="/add-bill" className="underline">
               Add new
-            </button>
+            </Link>
           </td>
         </tr>
         {props.bills.map((value, index) => {
